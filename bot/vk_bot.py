@@ -89,7 +89,7 @@ class VKBot:
 
                 if not text:
                     return
-                if text.startswitch(self.bot_message_prefixes):
+                if any(text.startswith(prefix) for prefix in self.bot_message_prefixes):
                     return
                 
                 logger.info(f"Сообщение от {peer_id}: {text}")
