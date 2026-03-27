@@ -1,0 +1,27 @@
+from typing import Dict, Any
+
+TRANSLATIONS = {
+    "StartHandler": "Здравствуйте! Это неофициальный бот который позволяет узнать расписание студентов и сотрудников ДГТУ.\nДля авторизации нажмите {BtnLogin}",
+    "LoginHandler": "Пожалуйста, введите ваш логин:",
+    "LoginEnterPassword": "Теперь введите ваш пароль:",
+    "HelpHandler": "Для взаимодействия с ботом используйте кнопки интерактивного меню. Они позволяют посмотреть актуальное расписание на сегодня, завтра, и на неделю.\n\nУсловные обозначения:\n\n🟢 - Лекция\n🟠 - Практика\n🔵 - По группам\n\nДля авторизации нажмите кнопку '🔑 Авторизация' и следуйте инструкциям.",
+    "LoginWrongLoginOrPasswordError": "Введен неправильный логин или пароль",
+    "LoginCompleteMessage": "В целях безопасности вы можете удалить логин и пароль введенный выше. Для взаимодествия с ботом используйте пункты меню.",
+    "LogoutNotAuthError": "Вы не авторизованы для выхода",
+    "LogoutCompleteMessage": "Вы успешно вышли с аккаунта",
+    "TimetableLoginFirstError": "Для начала вы должны авторизоваться",
+    "TimetableEmpty": "На этот день пар нет",
+    "TryLaterError": "Ошибка, пожалуйста попробуйте позже",
+}
+
+
+def localize(key: str, params: Dict[str, Any] = None) -> str:
+    text = TRANSLATIONS.get(key, key)
+    
+    if params:
+        try:
+            return text.format(**params)
+        except (KeyError, ValueError):
+            return text
+    
+    return text
