@@ -38,8 +38,8 @@ class VKBot:
         self.longpoll = None
         self.loop = None
         self._route: dict = {
-            "Начать": self.handlers.start_handlers,
-            "📖 Сегодня": self.handlers.login_handler,
+            "Начать": self.handlers.start_handler,
+            "📖 Сегодня": self.handlers.today_handler,
             "📖 Завтра": self.handlers.tomorrow_handler,
             "📖 Неделя": self.handlers.week_handler,
             'ℹ Помощь': self.handlers.help_handler,
@@ -105,6 +105,17 @@ class VKBot:
 
         except Exception as e:
             logger.error(f"Ошибка обработки события: {e}", exc_info=True)
+
+    async def _route_message(self, context: dict):
+        text = context['text'].strip()
+        peer_id = context['peer_id']
+
+        try:
+            handler = self._route.get(text, self._route["_"])
+            await handler(peer_id, context)
+        except Exception as e:
+            logger.error(f"Ошибка маршрутизации: {e}", exc_info=True)
+            self._send_message(peer_id, "Произошла ошибка. Пожалуйста, попробуйте позже.")
 
     async def start(self):
         try:
