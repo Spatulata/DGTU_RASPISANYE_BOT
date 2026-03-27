@@ -125,8 +125,6 @@ class VKHandlers:
 
         login_state = self._get(f"{user_id}:login_state")
 
-        logger.info(f"Пользователь {user_id}: состояние={login_state}, текст={text}")
-
         if login_state == "waiting_login":
             logger.info(f"Пользователь {user_id}: сохранение логина и ожидание пароля")
             self._set_many({
