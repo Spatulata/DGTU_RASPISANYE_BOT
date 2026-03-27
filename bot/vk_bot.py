@@ -76,30 +76,21 @@ class VKBot:
     def _process_event(self, event):
         try:
             if event.type == VkEventType.MESSAGE_NEW:
-                logger.debug(f"Получено событие: {event.type}")
-
                 if event.from_user:
                     peer_id = event.peer_id
                     text = event.text
                     from_id = event.user_id
-                    logger.debug(f"Сообщение от пользователя {from_id}: {text!r}")
                 elif event.from_chat:
                     peer_id = event.peer_id
                     text = event.text
                     from_id = event.user_id
-                    logger.debug(f"Сообщение из чата {peer_id}: {text!r}")
                 else:
-                    logger.debug("Сообщение не от пользователя и не из чата")
                     return
 
                 if not text:
-                    logger.debug("Пустой текст")
                     return
                 if any(text.startswith(prefix) for prefix in self.bot_message_prefixes):
-                    logger.debug("Сообщение от бота - игнорируется")
                     return
-
-                logger.info(f"Сообщение от {peer_id}: {text}")
 
                 context = {
                     'peer_id': peer_id,
