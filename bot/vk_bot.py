@@ -77,7 +77,7 @@ class VKBot:
         try:
             if event.type == VkEventType.MESSAGE_NEW:
                 logger.debug(f"Получено событие: {event.type}")
-                
+
                 if event.from_user:
                     peer_id = event.peer_id
                     text = event.text
@@ -119,7 +119,7 @@ class VKBot:
     async def _route_message(self, context: dict):
         text = context['text'].strip()
         peer_id = context['peer_id']
-        
+
         logger.debug(f"_route_message: text={text!r}, peer_id={peer_id}")
 
         try:
@@ -162,7 +162,3 @@ class VKBot:
             logger.error(f"Ошибка LongPoll: {e}", exc_info=True)
 
         self.longpoll = None
-
-    async def shutdown(self):
-        logger.info("Остановка бота...")
-        self.running = False
