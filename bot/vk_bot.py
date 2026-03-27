@@ -45,7 +45,6 @@ class VKBot:
             'ℹ Помощь': self.handlers.help_handler,
             '🔑 Авторизация': self.handlers.login_handler,
             '🚪 Выход': self.handlers.logout_handler,
-            "_": self.handlers.text_message_handler,
         }
 
     def _init_vk(self):
