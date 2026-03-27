@@ -162,3 +162,7 @@ class VKBot:
             logger.error(f"Ошибка LongPoll: {e}", exc_info=True)
 
         self.longpoll = None
+
+    async def shutdown(self):
+        logger.info("Остановка бота...")
+        self.running = False
