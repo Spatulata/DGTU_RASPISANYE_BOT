@@ -76,22 +76,29 @@ class VKBot:
     def _process_event(self, event):
         try:
             if event.type == VkEventType.MESSAGE_NEW:
+                logger.debug(f"Получено событие: {event.type}")
+                
                 if event.from_user:
                     peer_id = event.peer_id
                     text = event.text
                     from_id = event.user_id
+                    logger.debug(f"Сообщение от пользователя {from_id}: {text!r}")
                 elif event.from_chat:
                     peer_id = event.peer_id
                     text = event.text
                     from_id = event.user_id
+                    logger.debug(f"Сообщение из чата {peer_id}: {text!r}")
                 else:
+                    logger.debug("Сообщение не от пользователя и не из чата")
                     return
 
                 if not text:
+                    logger.debug("Пустой текст")
                     return
                 if any(text.startswith(prefix) for prefix in self.bot_message_prefixes):
+                    logger.debug("Сообщение от бота - игнорируется")
                     return
-                
+
                 logger.info(f"Сообщение от {peer_id}: {text}")
 
                 context = {
@@ -101,7 +108,10 @@ class VKBot:
                 }
 
                 if self.loop:
+                    logger.debug(f"Отправка в _route_message: {text!r}")
                     asyncio.run_coroutine_threadsafe(self._route_message(context), self.loop)
+                else:
+                    logger.error("Event loop не инициализирован")
 
         except Exception as e:
             logger.error(f"Ошибка обработки события: {e}", exc_info=True)
@@ -109,9 +119,12 @@ class VKBot:
     async def _route_message(self, context: dict):
         text = context['text'].strip()
         peer_id = context['peer_id']
+        
+        logger.debug(f"_route_message: text={text!r}, peer_id={peer_id}")
 
         try:
             handler = self._route.get(text, self._route["_"])
+            logger.debug(f"Выбран handler: {handler.__name__ if hasattr(handler, '__name__') else handler}")
             await handler(peer_id, context)
         except Exception as e:
             logger.error(f"Ошибка маршрутизации: {e}", exc_info=True)
@@ -136,6 +149,8 @@ class VKBot:
             logger.info("Остановка бота")
         except Exception as e:
             logger.error(f"Критическая ошибка: {e}", exc_info=True)
+        finally:
+            await self.shutdown()
 
     def _run_longpoll(self):
         try:
@@ -147,3 +162,7 @@ class VKBot:
             logger.error(f"Ошибка LongPoll: {e}", exc_info=True)
 
         self.longpoll = None
+
+    async def shutdown(self):
+        logger.info("Остановка бота...")
+        self.running = False
