@@ -37,7 +37,7 @@ class VKBot:
         self.vk = None
         self.longpoll = None
         self.loop = None
-        self._route: dict [
+        self._route: dict = {
             "Начать": self.handlers.start_handlers,
             "📖 Сегодня": self.handlers.login_handler,
             "📖 Завтра": self.handlers.tomorrow_handler,
@@ -45,8 +45,8 @@ class VKBot:
             'ℹ Помощь': self.handlers.help_handler,
             '🔑 Авторизация': self.handlers.login_handler,
             '🚪 Выход': self.handlers.logout_handler,
-            "_": self.handlers.text_message_handler
-        ]
+            "_": self.handlers.text_message_handler,
+        }
 
     def _init_vk(self):
         try:
@@ -125,8 +125,6 @@ class VKBot:
             logger.info("Остановка бота")
         except Exception as e:
             logger.error(f"Критическая ошибка: {e}", exc_info=True)
-        finally:
-            await self.shutdown()
 
     def _run_longpoll(self):
         try:
