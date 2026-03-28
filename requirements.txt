@@ -1,0 +1,4 @@
+vk_api==11.10.0
+requests==2.31.0
+pytz==2024.1
+pymongo==4.10.1
